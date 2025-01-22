@@ -1,12 +1,12 @@
-import AccessService from '../services/accessService.js';
+import AuthService from '../services/authService.js';
 import { ResponseSender, CREATED } from '../utils/responses/index.js';
 import { asyncErrorWrapper } from '../helpers/async-error-wrapper.js';
 
-class AccessController {
+class AuthController {
     static signUp = async (req, res, next) => {
         const response = new CREATED({
             message: 'User created successfully',
-            metadata: await AccessService.signUp(req.body),
+            metadata: await AuthService.signUp(req.body),
         });
         ResponseSender.send(res, response);
     };
@@ -17,8 +17,8 @@ class AccessController {
 }
 
 const accessController = {
-    signUp: asyncErrorWrapper(AccessController.signUp),
-    logIn: asyncErrorWrapper(AccessController.logIn),
+    signUp: asyncErrorWrapper(AuthController.signUp),
+    logIn: asyncErrorWrapper(AuthController.logIn),
 };
 
 export default accessController;

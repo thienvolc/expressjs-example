@@ -1,9 +1,9 @@
 import { model, Schema } from 'mongoose';
 
-const COLLECTION_NAME = 'keyTokens';
-const DOCUMNET_NAME = 'KeyToken';
+const COLLECTION_NAME = 'authTokenKeys';
+const DOCUMNET_NAME = 'AuthTokenKey';
 
-const keyTokenSchema = new Schema(
+const authTokenKeySchema = new Schema(
     {
         userId: {
             type: Schema.Types.ObjectId,
@@ -30,4 +30,4 @@ const keyTokenSchema = new Schema(
     { timestamps: true, collection: COLLECTION_NAME },
 );
 
-export default model(DOCUMNET_NAME, keyTokenSchema);
+export default model(DOCUMNET_NAME, authTokenKeySchema);
