@@ -1,7 +1,8 @@
 @uri=http://localhost:3000/api/v1
 @accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkwYjc3MzEyOWI3MzllYWIyMzk0MmMiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNzM3NTM3Mzk1LCJleHAiOjE3Mzc3MTAxOTV9.ywXzGB7Qf2py2dBb0YwkMBGnRPYotNSRX7UCUX2gsNM
-
-###
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkwZjY5OWYwYjkwNWM2ODEwNmE5ZDIiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNzM3NTUzNTYxLCJleHAiOjE3MzgxNTgzNjF9.5qf8rzjRB-WuCdRZ3aQ88dc7zj0q7xoeMbXors5hsTg
+@apiKey=
+### user signup
 POST {{uri}}/user/signup
 Content-Type: application/json
 
@@ -11,6 +12,17 @@ Content-Type: application/json
     "password": "12345"
 }
 
-### 
+### user login
 POST {{uri}}/user/login
-authorization: Bearer {{accessToken}}
+x-access-token: {{accessToken}}
+# x-refresh-token: {{refreshToken}}
+x-api-key: {{apiKey}}
+Content-Type: application/json
+
+{
+    "email": "john@gmail.com",
+    "password": "12345"
+}
+
+### user logout
+POST {{uri}}/user/logout

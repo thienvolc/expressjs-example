@@ -1,6 +1,7 @@
 import AuthService from '../services/authService.js';
-import { ResponseSender, CREATED } from '../utils/responses/index.js';
+import { ResponseSender, CREATED, OK } from '../utils/responses/index.js';
 import { asyncErrorWrapper } from '../helpers/async-error-wrapper.js';
+import { getRefreshTokenFromHeaders } from '../auth/index.js';
 
 class AuthController {
     static signUp = async (req, res, next) => {
@@ -12,7 +13,12 @@ class AuthController {
     };
 
     static logIn = async (req, res, next) => {
-        // Log in implementation
+        const refreshToken = getRefreshTokenFromHeaders(req.headers);
+        const metadata = refreshToken
+            ? await AuthService.loginWithRefreshToken(req.body, refreshToken)
+            : await AuthService.loginWithoutRefreshToken(req.body);
+        const response = new OK({ message: 'User logged in successfully', metadata });
+        ResponseSender.send(res, response);
     };
 }
 

@@ -27,3 +27,6 @@ export class StaticMethodDecorator {
     isStaticMethod = (Class, method) => 
         typeof Class[method] === 'function' && method !== 'prototype' && method !== 'constructor';
 }
+
+import { Types } from 'mongoose';
+export const toMongooseObjectId = (id) => new Types.ObjectId(id);

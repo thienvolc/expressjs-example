@@ -21,3 +21,12 @@ export const generateTokenPair = (payload, keyPair) => {
     const refreshToken = jwt.sign(payload, keyPair.privateKey, { expiresIn: '7 days' });
     return { accessToken, refreshToken };
 };
+
+export const Headers = {
+    AUTHORIZATION: 'Authorization',
+    REFRESH_TOKEN: 'x-refresh-token',
+    ACCESS_TOKEN: 'x-access-token',
+    API_KEY: 'x-api-key',
+};
+
+export const getRefreshTokenFromHeaders = (headers) => headers[Headers.REFRESH_TOKEN];
