@@ -4,7 +4,7 @@ import ProductionConfig from './production-config.js';
 import { EnvironmentType } from './environment-config.js';
 
 export default class EnvironmentConfigFactory {
-    static getConfigOfType(environmentType) {
+    static getConfigOfType = (environmentType) => {
         switch (environmentType) {
             case EnvironmentType.DEVELOPMENT:
                 return this.getDevelopmentConfig();
@@ -15,20 +15,11 @@ export default class EnvironmentConfigFactory {
             default:
                 throw new Error('Environment type not found');
         }
-    }
+    };
 
-    static getDevelopmentConfig() {
-        return DevelopmentConfig.getConfig();
-    }
+    static getDevelopmentConfig = () => DevelopmentConfig.getConfig();
 
-    static getProductionConfig() {
-        return ProductionConfig.getConfig();
-    }
+    static getProductionConfig = () => ProductionConfig.getConfig();
 
-    static getTestConfig() {
-        return {
-            ...TestConfig.getConfig(),
-            environment: EnvironmentType.TEST,
-        };
-    }
+    static getTestConfig = () => TestConfig.getConfig();
 }

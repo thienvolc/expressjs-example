@@ -2,8 +2,8 @@ import { config } from '../configs/index.js';
 import MongoDatabase from './init-mongo.js';
 import { DatabaseType } from '../configs/environment/environment-config.js';
 
-class DatabaseFactory {
-    static createConnection() {
+export class DatabaseFactory {
+    static createConnection = () => {
         const databaseType = config.database.type;
         switch (databaseType) {
             case DatabaseType.MONGO:
@@ -11,7 +11,5 @@ class DatabaseFactory {
             default:
                 throw new Error('Database not supported');
         }
-    }
+    };
 }
-
-export { DatabaseFactory };

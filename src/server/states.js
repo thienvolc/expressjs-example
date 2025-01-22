@@ -3,17 +3,17 @@ class ServerState {
         this.server = server;
     }
 
-    start() {
+    start = () => {
         throw new Error('start() must be implemented by subclasses');
-    }
+    };
 
-    stop() {
+    stop = () => {
         throw new Error('stop() must be implemented by subclasses');
-    }
+    };
 }
 
 export class StoppedState extends ServerState {
-    start() {
+    start = () => {
         try {
             this.server.startApp();
             this.server.transitionTo(new RunningState(this.server));
@@ -21,21 +21,21 @@ export class StoppedState extends ServerState {
         } catch (error) {
             console.error(`Error starting server: ${error}`);
         }
-    }
+    };
 
-    stop() {
+    stop = () => {
         console.log('Server is already stopped.');
-    }
+    };
 }
 
 export class RunningState extends ServerState {
-    start() {
+    start = () => {
         console.log('Server is already running.');
-    }
+    };
 
-    stop() {
+    stop = () => {
         this.server.stopApp();
         this.server.transitionTo(new StoppedState(this.server));
         console.log('Server has stopped.');
-    }
+    };
 }

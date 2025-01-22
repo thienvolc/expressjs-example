@@ -10,41 +10,39 @@ export default class Server {
         this.state = new StoppedState(this);
     }
 
-    static createServerByConfig(config) {
-        return new Server(config);
-    }
+    static createServerByConfig = (config) => new Server(config);
 
-    transitionTo(newState) {
+    transitionTo = (newState) => {
         this.state = newState;
-    }
+    };
 
-    start() {
+    start = () => {
         this.state.start();
-    }
+    };
 
-    stop() {
+    stop = () => {
         this.state.stop();
-    }
+    };
 
-    startApp() {
+    startApp = () => {
         this.instance = this.app.listen(this.port, this.host, () => {
             console.log(`Server running on http://${this.host}:${this.port}`);
         });
 
         this.addSignalListeners();
-    }
+    };
 
-    addSignalListeners() {
+    addSignalListeners = () => {
         process.on('SIGINT', () => this.stopApp());
         process.on('SIGTERM', () => this.stopApp());
-    }
+    };
 
-    stopApp() {
+    stopApp = () => {
         if (this.instance) {
             this.instance.close(() => {
                 console.log('Server instance closed.');
                 process.exit(0);
             });
         }
-    }
+    };
 }
