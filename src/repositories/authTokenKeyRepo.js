@@ -13,4 +13,9 @@ export default class AuthTokenKeyRepository {
         const filter = { userId: toMongooseObjectId(userId) };
         return await authTokenKeyModel.findOneAndUpdate(filter, update, options).lean();
     };
+
+    static deleteByUserId = async (userId) => {
+        const filter = { userId: toMongooseObjectId(userId) };
+        return await authTokenKeyModel.deleteOne(filter).lean();
+    };
 }

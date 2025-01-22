@@ -20,11 +20,21 @@ class AuthController {
         const response = new OK({ message: 'User logged in successfully', metadata });
         ResponseSender.send(res, response);
     };
+
+    static handleRefreshToken = async (req, res, next) => {
+        const refreshToken = getRefreshTokenFromHeaders(req.headers);
+        const response = new OK({
+            message: 'Token refreshed successfully',
+            metadata: await AuthService.handleRefreshToken(req.body, refreshToken),
+        });
+        ResponseSender.send(res, response);
+    };
 }
 
 const accessController = {
     signUp: asyncErrorWrapper(AuthController.signUp),
     logIn: asyncErrorWrapper(AuthController.logIn),
+    handleRefreshToken: asyncErrorWrapper(AuthController.handleRefreshToken),
 };
 
 export default accessController;

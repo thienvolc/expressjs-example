@@ -1,12 +1,12 @@
 import UserService from './userService.js';
 import AuthTokenKeyService from './authTokenKeyService.js';
-import { AuthFailureError } from '../utils/responses/response-error.js';
-import { generateRandomKeyPair, generateTokenPair, comparePassword, hashPassword } from '../auth/index.js';
+import { AuthFailureError, ForbiddenError } from '../utils/responses/response-error.js';
+import { generateRandomKeyPair, generateTokenPair, comparePassword, hashPassword, verifyToken } from '../auth/index.js';
 import { selectFieldsFromObject } from '../utils/index.js';
 
 export default class AuthService {
     static signUp = async ({ name, email, password }) => {
-        await UserService.assureEmailNotExist(email);
+        await UserService.assertEmailNotExist(email);
         const userInfo = await this.createUserAndRetrieveInfo({ name, email, password });
         const tokens = await this.generateAndSaveTokens(userInfo);
         return { user: userInfo, tokens };
@@ -22,12 +22,12 @@ export default class AuthService {
 
     static generateAndSaveTokens = async (user) => {
         const keyPair = generateRandomKeyPair();
-        const tokens = this.generateTokensForNewUser(user, keyPair);
+        const tokens = this.generateTokensForUser(user, keyPair);
         await this.saveTokenKey(user._id, keyPair, tokens.refreshToken);
         return tokens;
     };
 
-    static generateTokensForNewUser = (user, keyPair) => {
+    static generateTokensForUser = (user, keyPair) => {
         const payload = this.createTokenPayload(user);
         return generateTokenPair(payload, keyPair);
     };
@@ -81,6 +81,47 @@ export default class AuthService {
         const tokens = await this.createTokensForExistingUser(user);
         await AuthTokenKeyService.updateActiveRefreshToken(user._id, tokens.refreshToken);
         return tokens;
+    };
+
+    static handleRefreshToken = async ({ userId }, refreshToken) => {
+        await this.verifyUserRefreshToken(refreshToken, userId);
+        const userInfo = await this.getUserInfoById(userId);
+        const tokens = await this.refreshTokensWithTracking(userInfo, refreshToken);
+        return { user: userInfo, tokens };
+    };
+
+    static verifyUserRefreshToken = async (refreshToken, userId) => {
+        const authTokenKey = await AuthTokenKeyService.getAuthTokenKeyByUserIdOrFail(userId);
+        await this.verifyTokenIntegrity(refreshToken, authTokenKey);
+    };
+
+    static verifyTokenIntegrity = async (refreshToken, authTokenKey) => {
+        if (authTokenKey.refreshToken === refreshToken) {
+            return verifyToken(refreshToken, authTokenKey.privateKey);
+        }
+        this.preventReusedRefreshToken(authTokenKey, refreshToken);
+        throw new AuthFailureError('Invalid refresh token');
+    };
+
+    static preventReusedRefreshToken = (authTokenKey, refreshToken) => {
+        if (authTokenKey.usedRefreshTokens.includes(refreshToken)) {
+            this.revokeReusedRefreshToken(authTokenKey.userId, refreshToken);
+            throw new ForbiddenError('Refresh token has been reused. Please log in again!');
+        }
+    };
+
+    static revokeReusedRefreshToken = async (userId, refreshToken) => {
+        const [userInfo] = await Promise.all([
+            this.getUserInfoById(userId),
+            AuthTokenKeyService.invalidateAllTokensForUser(userId),
+        ]);
+        await this.generateAndSaveTokens(userInfo);
+        await AuthTokenKeyService.recordUsedRefreshToken(userId, refreshToken);
+    };
+
+    static getUserInfoById = async (userId) => {
+        const user = await UserService.getUserById(userId);
+        return this.extractUserInfo(user);
     };
 
     static logOut = async () => {};

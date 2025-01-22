@@ -1,5 +1,5 @@
 import UserRepository from '../repositories/userRepo.js';
-import { InternalServerError, BadRequestError } from '../utils/responses/response-error.js';
+import { InternalServerError, BadRequestError, AuthFailureError } from '../utils/responses/response-error.js';
 
 export default class UserService {
     static createUser = async ({ name, email, password }) => {
@@ -17,9 +17,9 @@ export default class UserService {
             throw new BadRequestError('Email does not exist');
         }
         return user;
-    }
+    };
 
-    static assureEmailNotExist = async (email) => {
+    static assertEmailNotExist = async (email) => {
         const isExist = await this.isExistEmail(email);
         if (isExist) {
             throw new BadRequestError('Email already exists');
@@ -32,4 +32,14 @@ export default class UserService {
     };
 
     static getUserByEmail = async (email) => await UserRepository.findByEmail(email);
+
+    static getUserByIdOrThrow = async (userId) => {
+        const user = await this.getUserById(userId);
+        if (!user) {
+            throw new AuthFailureError('User does not exist');
+        }
+        return user;
+    };
+
+    static getUserById = async (userId) => await UserRepository.findByUserId(userId);
 }

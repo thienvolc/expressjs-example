@@ -1,4 +1,5 @@
 import AuthTokenKeyRepository from '../repositories/authTokenKeyRepo.js';
+import { ForbiddenError } from '../utils/responses/response-error.js';
 
 export default class AuthTokenKeyService {
     static createAuthKey = async ({ userId, privateKey, publicKey, refreshToken }) => {
@@ -9,6 +10,14 @@ export default class AuthTokenKeyService {
     static getAuthKeysByUserId = async (userId) => {
         const tokenKey = await AuthTokenKeyRepository.findByUserId(userId);
         return { privateKey: tokenKey.privateKey, publicKey: tokenKey.publicKey };
+    };
+
+    static getAuthTokenKeyByUserIdOrFail = async (userId) => {
+        const tokenKey = await AuthTokenKeyRepository.findByUserId(userId);
+        if (!tokenKey) {
+            throw new ForbiddenError('User did not registered');
+        }
+        return tokenKey;
     };
 
     static updateActiveRefreshToken = async (userId, refreshToken) => {
@@ -26,7 +35,18 @@ export default class AuthTokenKeyService {
         await this.updateByUserId(userId, update);
     };
 
+    static recordUsedRefreshToken = async (userId, usedRefreshToken) => {
+        const update = {
+            $addToSet: { usedRefreshTokens: usedRefreshToken },
+        };
+        await this.updateByUserId(userId, update);
+    };
+
     static updateByUserId = async (userId, update, options = {}) => {
         await AuthTokenKeyRepository.findByUserIdAndUpdate(userId, update, options);
     };
+
+    static invalidateAllTokensForUser = async (userId) => {
+        await AuthTokenKeyRepository.deleteByUserId(userId);
+    }
 }
