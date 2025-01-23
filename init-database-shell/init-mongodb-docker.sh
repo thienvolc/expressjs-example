@@ -1,3 +1,8 @@
-docker volume create mongo-data
-docker run -d -p 27017:27017 -v mongo-data:/data/db --name mongo-tutorial-nodejs-be mongo
-docker exec -it mongo-tutorial-nodejs-be mongosh
+VOLUME_NAME=mongo-data
+PORT_MAPPING=27017:27017
+VOLUME_MAPPING=$VOLUME_NAME:/data/db
+CONTAINER_NAME=mongo-tutorial-nodejs-be
+DOCKER_IMAGE=mongo 
+
+docker volume create $VOLUME_NAME
+docker run -d -p $PORT_MAPPING -v $VOLUME_MAPPING --name $CONTAINER_NAME $DOCKER_IMAGE
