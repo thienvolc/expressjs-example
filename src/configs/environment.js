@@ -32,21 +32,21 @@ export class EnvironmentFactory {
     static getDatabaseType = () => process.env.DATABASE_TYPE;
 }
 
-export class DevelopmentFactory extends EnvironmentFactory {
+export class DevEnvironmentFactory extends EnvironmentFactory {
     static getConfig = () => ({
         ...super.getConfig(),
         environment: EnvironmentType.DEVELOPMENT,
     });
 }
 
-export class ProductionFactory extends EnvironmentFactory {
+export class ProdEnvironmentFactory extends EnvironmentFactory {
     static getConfig = () => ({
         ...super.getConfig(),
         environment: EnvironmentType.PRODUCTION,
     });
 }
 
-export class TestFactory extends EnvironmentFactory {
+export class TestEnvironmentFactory extends EnvironmentFactory {
     static getConfig = () => ({
         ...super.getConfig(),
         environment: EnvironmentType.TEST,

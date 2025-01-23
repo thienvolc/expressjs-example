@@ -12,7 +12,8 @@ class ConfigLoader {
     };
 }
 
-import { DevelopmentFactory, ProductionFactory, TestFactory, EnvironmentType } from './environment.js';
+import { DevEnvironmentFactory, ProdEnvironmentFactory } from './environment.js';
+import { TestEnvironmentFactory, EnvironmentType } from './environment.js';
 
 class AppConfig {
     static loadAndGetEnvironmentConfig = () => {
@@ -24,11 +25,11 @@ class AppConfig {
     static getEnvironmentConfigByType(environmentType) {
         switch (environmentType) {
             case EnvironmentType.DEVELOPMENT:
-                return DevelopmentFactory.getConfig();
+                return DevEnvironmentFactory.getConfig();
             case EnvironmentType.PRODUCTION:
-                return ProductionFactory.getConfig();
+                return ProdEnvironmentFactory.getConfig();
             case EnvironmentType.TEST:
-                return TestFactory.getConfig();
+                return TestEnvironmentFactory.getConfig();
             default:
                 throw new Error('Environment type is not valid!');
         }
