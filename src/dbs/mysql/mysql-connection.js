@@ -41,13 +41,13 @@ export class MySQLConnection extends DBConnection {
 export class MySQLConnectionFactory extends DBConnectionFactory {
     static #MySQLInstance;
 
-    static getInstance = () => {
+    static getInstance = async () => {
         if (!this.#MySQLInstance) {
             const connection = new MySQLConnection();
-            this.#MySQLInstance = connection.establishConnection();
+            this.#MySQLInstance = await connection.establishConnection();
         }
         return this.#MySQLInstance;
     };
 
-    static createConnection = () => this.getInstance();
+    static createConnection = async () => await this.getInstance();
 }

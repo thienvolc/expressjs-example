@@ -41,13 +41,13 @@ export class MongoConnection extends DBConnection {
 export class MongoConnectionFactory extends DBConnectionFactory {
     static #mongoInstance;
 
-    static getInstance = () => {
+    static getInstance = async () => {
         if (!this.#mongoInstance) {
             const connection = new MongoConnection();
-            this.#mongoInstance = connection.establishConnection();
+            this.#mongoInstance = await connection.establishConnection();
         }
         return this.#mongoInstance;
     };
 
-    static createConnection = () => this.getInstance();
+    static createConnection = async () => await this.getInstance();
 }
