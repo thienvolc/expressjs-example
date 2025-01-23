@@ -32,10 +32,10 @@ class AuthController {
 
     static logOut = async (req, res, next) => {
         const refreshToken = getRefreshTokenFromHeaders(req.headers);
-        if (refreshToken) {
-            await AuthService.logOutAndRecordRefreshToken(req.body.userId, refreshToken);
-        }
-        const response = new OK({ message: 'User logged out successfully' });
+        refreshToken
+            ? await AuthService.logOutAllUsersAndRecordRefreshToken(req.body.userId, refreshToken)
+            : await AuthService.logOutAllUsers(req.body.userId);
+        const response = new OK({ message: 'All users logged out successfully' });
         ResponseSender.send(res, response);
     };
 }

@@ -111,12 +111,7 @@ export default class AuthService {
     };
 
     static revokeReusedRefreshToken = async (userId, refreshToken) => {
-        const [userInfo] = await Promise.all([
-            this.getUserInfoById(userId),
-            AuthTokenKeyService.invalidateAuthTokenKeyForUser(userId),
-        ]);
-        await this.createAuthTokenKeyByUserInfo(userInfo);
-        await AuthTokenKeyService.recordUsedRefreshTokenForUser(userId, refreshToken);
+        this.logOutAllUsersAndRecordRefreshToken(userId, refreshToken);
     };
 
     static getUserInfoById = async (userId) => {
@@ -124,7 +119,16 @@ export default class AuthService {
         return this.extractUserInfo(user);
     };
 
-    static logOutAndRecordRefreshToken = async (userId, refreshToken) => {
-        await this.revokeReusedRefreshToken(userId, refreshToken);
+    static logOutAllUsersAndRecordRefreshToken = async (userId, refreshToken) => {
+        await this.logOutAllUsers(userId);
+        await AuthTokenKeyService.recordUsedRefreshTokenForUser(userId, refreshToken);
+    };
+
+    static logOutAllUsers = async (userId) => {
+        const [userInfo] = await Promise.all([
+            this.getUserInfoById(userId),
+            AuthTokenKeyService.invalidateAuthTokenKeyForUser(userId),
+        ]);
+        await this.createAuthTokenKeyByUserInfo(userInfo);
     };
 }
