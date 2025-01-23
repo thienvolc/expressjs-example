@@ -1,5 +1,5 @@
 export const DBType = {
-    MONGO: 'mongodb',
+    MONGO: 'mongo',
     MYSQL: 'mysql',
     MOCK: 'mock',
 };
