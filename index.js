@@ -7,4 +7,4 @@ const serverConfig = { ...environmentConfig, app };
 const server = Server.createByConfig(serverConfig);
 server.start();
 
-await createDBConnectionByType(environmentConfig.database.type);
+await createDBConnectionByType(environmentConfig.db.type);

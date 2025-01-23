@@ -1,4 +1,4 @@
-import { MongoDBConfig, MySQLDBConfig, InMemoryMockDBConfig, DatabaseType } from './database.js';
+import { MongoDBConfig, MySQLDBConfig, InMemoryMockDBConfig, DBType } from './database.js';
 
 export const EnvironmentType = {
     DEVELOPMENT: 'development',
@@ -10,26 +10,26 @@ export class EnvironmentFactory {
     static getConfig = () => ({
         host: this.getHost(),
         port: this.getPort(),
-        database: this.getDatabase(),
+        db: this.getDB(),
     });
 
     static getHost = () => process.env.HOST;
 
     static getPort = () => process.env.PORT;
 
-    static getDatabase = () => {
-        const databaseType = this.getDatabaseType();
-        switch (databaseType) {
-            case DatabaseType.MONGO:
+    static getDB = () => {
+        const dbType = this.getDBType();
+        switch (dbType) {
+            case DBType.MONGO:
                 return MongoDBConfig.getConfig();
-            case DatabaseType.MYSQL:
+            case DBType.MYSQL:
                 return MySQLDBConfig.getConfig();
             default:
                 return InMemoryMockDBConfig.getConfig();
         }
     };
 
-    static getDatabaseType = () => process.env.DATABASE_TYPE;
+    static getDBType = () => process.env.DB_TYPE;
 }
 
 export class DevEnvironmentFactory extends EnvironmentFactory {

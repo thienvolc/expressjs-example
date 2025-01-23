@@ -17,7 +17,7 @@ export class MySQLConnection extends DBConnection {
     };
 
     setConfigForProvider = () => {
-        this.provider.setConfig(this.environmentConfig.database);
+        this.provider.setConfig(this.environmentConfig.db);
         this.setDebugIfNotProduction();
     };
 
