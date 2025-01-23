@@ -1,4 +1,4 @@
-import { MongoDBDatabaseConfig, MySQLDatabaseConfig, InMemoryMockDatabaseConfig, DatabaseType } from './database.js';
+import { MongoDBConfig, MySQLDBConfig, InMemoryMockDBConfig, DatabaseType } from './database.js';
 
 export const EnvironmentType = {
     DEVELOPMENT: 'development',
@@ -21,11 +21,11 @@ export class EnvironmentFactory {
         const databaseType = this.getDatabaseType();
         switch (databaseType) {
             case DatabaseType.MONGO:
-                return MongoDBDatabaseConfig.getConfig();
+                return MongoDBConfig.getConfig();
             case DatabaseType.MYSQL:
-                return MySQLDatabaseConfig.getConfig();
+                return MySQLDBConfig.getConfig();
             default:
-                return InMemoryMockDatabaseConfig.getConfig();
+                return InMemoryMockDBConfig.getConfig();
         }
     };
 

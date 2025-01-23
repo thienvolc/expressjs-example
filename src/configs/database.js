@@ -4,7 +4,7 @@ export const DatabaseType = {
     MOCK: 'mock',
 };
 
-export class MongoDBDatabaseConfig {
+export class MongoDBConfig {
     static getConfig = () => ({
         type: DatabaseType.MONGO,
         host: process.env.MONGO_HOST,
@@ -15,7 +15,7 @@ export class MongoDBDatabaseConfig {
     });
 }
 
-export class MySQLDatabaseConfig {
+export class MySQLDBConfig {
     static getConfig = () => ({
         type: DatabaseType.MYSQL,
         host: process.env.MYSQL_HOST,
@@ -26,7 +26,7 @@ export class MySQLDatabaseConfig {
     });
 }
 
-export class InMemoryMockDatabaseConfig {
+export class InMemoryMockDBConfig {
     static getConfig = () => ({
         type: DatabaseType.MOCK,
     });
