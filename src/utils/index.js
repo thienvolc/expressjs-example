@@ -29,4 +29,4 @@ export class StaticMethodDecorator {
 }
 
 import { Types } from 'mongoose';
-export const toMongooseObjectId = (id) => new Types.ObjectId(id);
+export const castMongooseObjectId = (id) => new Types.ObjectId(id);

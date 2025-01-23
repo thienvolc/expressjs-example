@@ -5,5 +5,5 @@ export default class UserRepository {
 
     static findByEmail = async (email) => await userModel.findOne({ email }).lean();
 
-    static findByUserId = async (userId) => await userModel.findById(userId).lean();
+    static findById = async (userId) => await userModel.findById(userId).lean();
 }

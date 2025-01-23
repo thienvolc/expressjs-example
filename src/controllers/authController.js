@@ -15,8 +15,8 @@ class AuthController {
     static logIn = async (req, res, next) => {
         const refreshToken = getRefreshTokenFromHeaders(req.headers);
         const metadata = refreshToken
-            ? await AuthService.loginWithRefreshToken(req.body, refreshToken)
-            : await AuthService.loginWithoutRefreshToken(req.body);
+            ? await AuthService.logInAndRecordRefreshToken(req.body, refreshToken)
+            : await AuthService.logIn(req.body);
         const response = new OK({ message: 'User logged in successfully', metadata });
         ResponseSender.send(res, response);
     };

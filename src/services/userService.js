@@ -11,15 +11,7 @@ export default class UserService {
         }
     };
 
-    static getUserByEmailOrThrow = async (email) => {
-        const user = await this.getUserByEmail(email);
-        if (!user) {
-            throw new BadRequestError('Email does not exist');
-        }
-        return user;
-    };
-
-    static assertEmailNotExist = async (email) => {
+    static ensureEmailNotExist = async (email) => {
         const isExist = await this.isExistEmail(email);
         if (isExist) {
             throw new BadRequestError('Email already exists');
@@ -33,6 +25,14 @@ export default class UserService {
 
     static getUserByEmail = async (email) => await UserRepository.findByEmail(email);
 
+    static getUserByEmailOrThrow = async (email) => {
+        const user = await this.getUserByEmail(email);
+        if (!user) {
+            throw new BadRequestError('Email does not exist');
+        }
+        return user;
+    };
+
     static getUserByIdOrThrow = async (userId) => {
         const user = await this.getUserById(userId);
         if (!user) {
@@ -41,5 +41,5 @@ export default class UserService {
         return user;
     };
 
-    static getUserById = async (userId) => await UserRepository.findByUserId(userId);
+    static getUserById = async (userId) => await UserRepository.findById(userId);
 }

@@ -1,6 +1,6 @@
 @uri=http://localhost:3000/api/v1
 @accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkwYjc3MzEyOWI3MzllYWIyMzk0MmMiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNzM3NTM3Mzk1LCJleHAiOjE3Mzc3MTAxOTV9.ywXzGB7Qf2py2dBb0YwkMBGnRPYotNSRX7UCUX2gsNM
-@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkxMDExNzY0YWIzZmFiNjEzZGRkZjIiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNzM3NTcxODEwLCJleHAiOjE3MzgxNzY2MTB9.sJKukvjvDExObCFa11WrzaEtrZRRQqiKBhLT7I0M6bo
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkyMTM0ODg2MzIzYjYzNzgyMTI3NTciLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNzM3NjI3MDcxLCJleHAiOjE3MzgyMzE4NzF9.LHVR-r5p51tcvX1nP_cUCm6Ouos-78dT2ansg-NHxoY
 @apiKey=
 ### user signup
 POST {{uri}}/user/signup
@@ -28,7 +28,7 @@ x-refresh-token: {{refreshToken}}
 Content-Type: application/json
 
 {
-    "userId": "6791011764ab3fab613dddf2"
+    "userId": "6792134886323b6378212757"
 }
 
 ### user logout
