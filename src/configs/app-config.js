@@ -12,16 +12,29 @@ class ConfigLoader {
     };
 }
 
-import EnvironmentConfigFactory from './environment/environment-config-factory.js';
+import { DevelopmentFactory, ProductionFactory, TestFactory, EnvironmentType } from './environment.js';
 
 class AppConfig {
     static loadAndGetEnvironmentConfig = () => {
         const environmentType = ConfigLoader.getEnvironmentType();
         ConfigLoader.loadEnvironmentFileByType(environmentType);
-        return EnvironmentConfigFactory.getConfigOfType(environmentType);
+        return this.getEnvironmentConfigByType(environmentType);
     };
+
+    static getEnvironmentConfigByType(environmentType) {
+        switch (environmentType) {
+            case EnvironmentType.DEVELOPMENT:
+                return DevelopmentFactory.getConfig();
+            case EnvironmentType.PRODUCTION:
+                return ProductionFactory.getConfig();
+            case EnvironmentType.TEST:
+                return TestFactory.getConfig();
+            default:
+                throw new Error('Environment type is not valid!');
+        }
+    }
 }
 
-const config = AppConfig.loadAndGetEnvironmentConfig();
+const environmentConfig = AppConfig.loadAndGetEnvironmentConfig();
 
-export default config;
+export default environmentConfig;

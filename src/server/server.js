@@ -10,7 +10,7 @@ export default class Server {
         this.state = new StoppedState(this);
     }
 
-    static createServerByConfig = (config) => new Server(config);
+    static createByConfig = (config) => new Server(config);
 
     transitionTo = (newState) => {
         this.state = newState;
