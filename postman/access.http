@@ -33,3 +33,9 @@ Content-Type: application/json
 
 ### user logout
 POST {{uri}}/user/logout
+x-refresh-token: {{refreshToken}}
+Content-Type: application/json
+
+{
+    "userId": "6792134886323b6378212757"
+}

@@ -124,27 +124,7 @@ export default class AuthService {
         return this.extractUserInfo(user);
     };
 
-    static logOut = async () => {};
+    static logOutAndRecordRefreshToken = async (userId, refreshToken) => {
+        await this.revokeReusedRefreshToken(userId, refreshToken);
+    };
 }
-
-/*
-Login Flow
-Validate credentials: Ensure the provided email and password match an existing user.
-
-Fetch key pair: Retrieve the publicKey and privateKey for the user from the database.
-
-Generate new tokens: Create a new accessToken and refreshToken.
-
-Store refreshToken: Update the database with the new refreshToken while keeping the old refreshToken in the usedRefreshToken list.
-
-Respond to the client: Return the new tokens and user details.
-
-Refresh Token Flow
-Validate refreshToken: Check if the provided refreshToken matches the one in the database and is not in the usedRefreshToken list.
-
-Generate new tokens: Create a new accessToken and refreshToken.
-
-Update token store: Add the old refreshToken to the usedRefreshToken list and store the new refreshToken.
-
-Respond to the client: Return the new tokens.
-*/

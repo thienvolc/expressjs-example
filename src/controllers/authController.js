@@ -29,12 +29,22 @@ class AuthController {
         });
         ResponseSender.send(res, response);
     };
+
+    static logOut = async (req, res, next) => {
+        const refreshToken = getRefreshTokenFromHeaders(req.headers);
+        if (refreshToken) {
+            await AuthService.logOutAndRecordRefreshToken(req.body.userId, refreshToken);
+        }
+        const response = new OK({ message: 'User logged out successfully' });
+        ResponseSender.send(res, response);
+    };
 }
 
 const accessController = {
     signUp: asyncErrorWrapper(AuthController.signUp),
     logIn: asyncErrorWrapper(AuthController.logIn),
     handleRefreshToken: asyncErrorWrapper(AuthController.handleRefreshToken),
+    logOut: asyncErrorWrapper(AuthController.logOut),
 };
 
 export default accessController;
