@@ -83,7 +83,7 @@ export default class AuthService {
         await AuthTokenKeyService.recordUsedRefreshTokenForUser(userId, usedRefreshToken);
     };
 
-    static handleRefreshToken = async ({ userId }, refreshToken) => {
+    static handleRefreshToken = async (userId, refreshToken) => {
         await this.verifyUserRefreshToken(refreshToken, userId);
         const userInfo = await this.getUserInfoById(userId);
         const tokens = await this.refreshTokenPairWithTrackingByUserInfo(userInfo, refreshToken);

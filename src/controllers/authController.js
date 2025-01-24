@@ -1,6 +1,6 @@
 import AuthService from '../services/authService.js';
 import { ResponseSender, CREATED, OK } from '../utils/responses/index.js';
-import { asyncErrorWrapper } from '../helpers/async-error-wrapper.js';
+import { asyncErrorDecorator } from '../helpers/async-error-wrapper.js';
 import { getRefreshTokenFromHeaders } from '../auth/index.js';
 
 class AuthController {
@@ -25,7 +25,7 @@ class AuthController {
         const refreshToken = getRefreshTokenFromHeaders(req.headers);
         const response = new OK({
             message: 'Token refreshed successfully',
-            metadata: await AuthService.handleRefreshToken(req.body, refreshToken),
+            metadata: await AuthService.handleRefreshToken(req.body.userId, refreshToken),
         });
         ResponseSender.send(res, response);
     };
@@ -40,11 +40,6 @@ class AuthController {
     };
 }
 
-const accessController = {
-    signUp: asyncErrorWrapper(AuthController.signUp),
-    logIn: asyncErrorWrapper(AuthController.logIn),
-    handleRefreshToken: asyncErrorWrapper(AuthController.handleRefreshToken),
-    logOut: asyncErrorWrapper(AuthController.logOut),
-};
+const authController = asyncErrorDecorator.decorateAllStaticMethods(AuthController);
 
-export default accessController;
+export default authController;
