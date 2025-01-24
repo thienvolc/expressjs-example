@@ -6,6 +6,9 @@ export const EnvironmentType = {
     TEST: 'test',
 };
 
+export const isValidEnvironmentType = (environmentType) => 
+    Object.values(EnvironmentType).includes(environmentType);
+
 export class EnvironmentFactory {
     static getConfig = () => ({
         host: this.getHost(),

@@ -1,29 +1,71 @@
-import 'dotenv/config';
 import dotenv from 'dotenv';
+import { DevEnvironmentFactory, ProdEnvironmentFactory } from './environment.js';
+import { TestEnvironmentFactory, EnvironmentType, isValidEnvironmentType } from './environment.js';
 
-const ENVIRONMENT_PATH = './.env';
+const DEFAULT_ENV_BASE_FILE_PATH = './.env';
 
-class ConfigLoader {
-    static getEnvironmentType = () => process.env.NODE_ENV;
+class EnvironmentConfigLoader {
+    #filePath;
 
-    static loadEnvironmentFileByType = (environmentType) => {
-        const filePath = `${ENVIRONMENT_PATH}.${environmentType}`;
-        dotenv.config({ path: filePath });
+    constructor(filePath) {
+        this.#filePath = filePath;
+    }
+
+    load = () => {
+        dotenv.config({ path: this.#filePath });
     };
 }
 
-import { DevEnvironmentFactory, ProdEnvironmentFactory } from './environment.js';
-import { TestEnvironmentFactory, EnvironmentType } from './environment.js';
+class EnvironmentFilePathHandler {
+    static getFilePath = (baseFilePath, environmentType) =>
+        environmentType ? `${baseFilePath}.${environmentType}` : baseFilePath;
+}
 
-class AppConfig {
-    static loadAndGetEnvironmentConfig = () => {
-        const environmentType = ConfigLoader.getEnvironmentType();
-        ConfigLoader.loadEnvironmentFileByType(environmentType);
-        return this.getEnvironmentConfigByType(environmentType);
+class EnvironmentConfig {
+    #baseFilePath;
+    #environmentType;
+
+    static loadConfig = (baseFilePath, environmentType) => {
+        const config = new EnvironmentConfig(baseFilePath);
+        config.setEnvironmentType(environmentType);
+        return config.initializeConfig();
     };
 
-    static getEnvironmentConfigByType(environmentType) {
-        switch (environmentType) {
+    static loadDefaultConfig = () => {
+        const config = new EnvironmentConfig(DEFAULT_ENV_BASE_FILE_PATH);
+        return config.initializeConfig();
+    };
+
+    static loadConfigWithType = (environmentType) => {
+        const config = new EnvironmentConfig(DEFAULT_ENV_BASE_FILE_PATH);
+        config.setEnvironmentType(environmentType);
+        return config.initializeConfig();
+    };
+
+    constructor(baseFilePath) {
+        this.#baseFilePath = baseFilePath;
+        this.#environmentType = null;
+    }
+
+    setEnvironmentType = (environmentType) => {
+        if (!isValidEnvironmentType(environmentType)) {
+            throw new Error('Environment type is not valid!');
+        }
+        this.#environmentType = environmentType;
+    };
+
+    initializeConfig = () => {
+        this.#loadEnvironmentFile();
+        return this.#getConfig();
+    };
+
+    #loadEnvironmentFile = () => {
+        const filePath = EnvironmentFilePathHandler.getFilePath(this.#baseFilePath, this.#environmentType);
+        new EnvironmentConfigLoader(filePath).load();
+    };
+
+    #getConfig() {
+        switch (this.#environmentType) {
             case EnvironmentType.DEVELOPMENT:
                 return DevEnvironmentFactory.getConfig();
             case EnvironmentType.PRODUCTION:
@@ -31,11 +73,9 @@ class AppConfig {
             case EnvironmentType.TEST:
                 return TestEnvironmentFactory.getConfig();
             default:
-                throw new Error('Environment type is not valid!');
+                throw new Error('Invalid environment type!');
         }
     }
 }
 
-const environmentConfig = AppConfig.loadAndGetEnvironmentConfig();
-
-export default environmentConfig;
+export default EnvironmentConfig.loadConfigWithType(EnvironmentType.DEVELOPMENT);
