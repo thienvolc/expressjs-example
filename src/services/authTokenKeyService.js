@@ -10,37 +10,33 @@ export default class AuthTokenKeyService {
 
     static getAuthKeyPairByUserId = async (userId) => {
         const tokenKey = await AuthTokenKeyRepository.findByUserId(userId);
+        return this.#extractKeyPair(tokenKey);
+    };
+
+    static #extractKeyPair = (tokenKey) => {
         const { privateKey, publicKey } = tokenKey;
         return { privateKey, publicKey };
     };
 
-    static getAuthTokenKeyByUserIdOrFail = async (userId) => {
-        const tokenKey = await this.getAuthTokenKeyByUserId(userId);
+    static getAuthTokenKeyByUserIdOrThrow = async (userId) => {
+        const tokenKey = await AuthTokenKeyRepository.findByUserId(userId);
         if (!tokenKey) {
             throw new ForbiddenError('User did not registered');
         }
         return tokenKey;
     };
 
-    static getAuthTokenKeyByUserId = async (userId) => {
-        return await AuthTokenKeyRepository.findByUserId(userId);
-    };
-
     static updateActiveRefreshTokenForUser = async (userId, refreshToken) => {
-        const update = {
-            $set: { refreshToken },
-        };
-        await this.updateByUserId(userId, update);
+        const update = { $set: { refreshToken } };
+        await this.#updateByUserId(userId, update);
     };
 
     static recordUsedRefreshTokenForUser = async (userId, usedRefreshToken) => {
-        const update = {
-            $addToSet: { usedRefreshTokens: usedRefreshToken },
-        };
-        await this.updateByUserId(userId, update);
+        const update = { $addToSet: { usedRefreshTokens: usedRefreshToken } };
+        await this.#updateByUserId(userId, update);
     };
 
-    static updateByUserId = async (userId, update, options = {}) => {
+    static #updateByUserId = async (userId, update, options = {}) => {
         await AuthTokenKeyRepository.findByUserIdAndUpdate(userId, update, options);
     };
 
