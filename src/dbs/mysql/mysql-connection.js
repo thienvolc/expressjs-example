@@ -1,53 +1,65 @@
-import { DBConnection, DBConnectionFactory } from '../db/index.js';
-import { environmentConfig, EnvironmentType } from '../../configs/index.js';
 import MySQLDB from './mysql.js';
+import { DBConnection, DBConnectionFactory } from '../db/index.js';
 
-export class MySQLConnection extends DBConnection {
-    constructor() {
-        super();
-        this.provider = new MySQLDB();
-        this.environmentConfig = environmentConfig;
+export class MySQLUriHandler {
+    #config;
+
+    static getUriFromConfig = (config) => {
+        const handler = new MySQLUriHandler(config);
+        return handler.getUri();
+    };
+
+    constructor(config) {
+        this.#config = config;
     }
 
-    establishConnection = async () => {
-        this.setConfigForProvider();
-        const connection = await this.provider.connect();
-        this.logDevelopment();
-        return connection;
-    };
+    getUri = () => (this.#isSecure() ? this.#getSecureUri() : this.#getNormalUri());
 
-    setConfigForProvider = () => {
-        this.provider.setConfig(this.environmentConfig.db);
-        this.setDebugIfNotProduction();
-    };
+    #getSecureUri = () => {};
 
-    setDebugIfNotProduction = () => {
-        if (!this.isProductionEnvironment()) {
-            this.provider.setDebug();
-        }
-    };
+    #getNormalUri = () => {};
 
-    isProductionEnvironment = () => this.environmentConfig.environment === EnvironmentType.PRODUCTION;
-
-    logDevelopment = () => {
-        if (this.isDevelopmentEnvironment()) {
-            console.log('MySQL connection established');
-        }
-    };
-
-    isDevelopmentEnvironment = () => this.environmentConfig.environment === EnvironmentType.DEVELOPMENT;
+    #isSecure = () => !!this.#config.user && !!this.#config.password;
 }
 
-export class MySQLConnectionFactory extends DBConnectionFactory {
-    static #MySQLInstance;
+export class MySQLConnection extends DBConnection {
+    #provider;
+    #config;
+    #options;
 
-    static getInstance = async () => {
-        if (!this.#MySQLInstance) {
-            const connection = new MySQLConnection();
-            this.#MySQLInstance = await connection.establishConnection();
-        }
-        return this.#MySQLInstance;
+    constructor() {
+        super();
+        this.#provider = new MySQLDB();
+        this.#config = null;
+        this.#options = {};
+    }
+
+    setConfig = (config) => {
+        this.#config = config;
     };
 
-    static createConnection = async () => await this.getInstance();
+    setDebug = () => {
+        this.#provider.setDebug();
+    };
+
+    setSafePoolSize = () => {};
+
+    connect = async () => {
+        const connectionUri = MySQLUriHandler.getUriFromConfig(this.#config);
+        const connection = await this.#provider.connect(connectionUri, this.#options);
+        return connection;
+    };
+}
+
+export class MySQLConnectionSingletonFactory extends DBConnectionFactory {
+    static #instance = null;
+
+    static getInstance = () => {
+        if (!this.#instance) {
+            this.#instance = new MySQLConnection();
+        }
+        return this.#instance;
+    };
+
+    static createConnection = () => this.getInstance();
 }

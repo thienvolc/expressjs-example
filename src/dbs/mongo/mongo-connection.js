@@ -1,53 +1,73 @@
-import { DBConnection, DBConnectionFactory } from '../db/index.js';
 import MongoDB from './mongo.js';
-import { environmentConfig, EnvironmentType } from '../../configs/index.js';
+import { DBConnection, DBConnectionFactory } from '../db/index.js';
 
-export class MongoConnection extends DBConnection {
-    constructor() {
-        super();
-        this.provider = new MongoDB();
-        this.environmentConfig = environmentConfig;
+export class MongoUriHandler {
+    #config;
+
+    static getUriFromConfig = (config) => {
+        const handler = new MongoUriHandler(config);
+        return handler.getUri();
+    };
+
+    constructor(config) {
+        this.#config = config;
     }
 
-    establishConnection = async () => {
-        this.setConfigForProvider();
-        const connection = await this.provider.connect();
-        this.logDevelopment();
-        return connection;
+    getUri = () => (this.#isSecure() ? this.#getSecureUri() : this.#getNormalUri());
+
+    #getSecureUri = () => {
+        const { user, password, host, port, name } = this.#config;
+        return `mongodb://${user}:${password}@${host}:${port}/${name}`;
     };
 
-    setConfigForProvider = () => {
-        this.provider.setConfig(this.environmentConfig.db);
-        this.setDebugIfNotProduction();
+    #getNormalUri = () => {
+        const { host, port, name } = this.#config;
+        return `mongodb://${host}:${port}/${name}`;
     };
 
-    setDebugIfNotProduction = () => {
-        if (!this.isProductionEnvironment()) {
-            this.provider.setDebug();
-        }
-    };
-
-    isProductionEnvironment = () => this.environmentConfig.environment === EnvironmentType.PRODUCTION;
-
-    logDevelopment = () => {
-        if (this.isDevelopmentEnvironment()) {
-            console.log('Mongo connection established');
-        }
-    };
-
-    isDevelopmentEnvironment = () => this.environmentConfig.environment === EnvironmentType.DEVELOPMENT;
+    #isSecure = () => !!this.#config.user && !!this.#config.password;
 }
 
-export class MongoConnectionFactory extends DBConnectionFactory {
-    static #mongoInstance;
+export class MongoConnection extends DBConnection {
+    #provider;
+    #config;
+    #options;
 
-    static getInstance = async () => {
-        if (!this.#mongoInstance) {
-            const connection = new MongoConnection();
-            this.#mongoInstance = await connection.establishConnection();
-        }
-        return this.#mongoInstance;
+    constructor() {
+        super();
+        this.#provider = new MongoDB();
+        this.#config = null;
+        this.#options = {};
+    }
+
+    setConfig = (config) => {
+        this.#config = config;
     };
 
-    static createConnection = async () => await this.getInstance();
+    setDebug = () => {
+        this.#provider.setDebug();
+    };
+
+    setSafePoolSize = () => {
+        this.#options = { maxPoolSize: 100 };
+    }
+
+    connect = async () => {
+        const connectionUri = MongoUriHandler.getUriFromConfig(this.#config);
+        const connection = await this.#provider.connect(connectionUri, this.#options);
+        return connection;
+    };
+}
+
+export class MongoConnectionSingletonFactory extends DBConnectionFactory {
+    static #instance = null;
+
+    static getInstance = () => {
+        if (!this.#instance) {
+            this.#instance = new MongoConnection();
+        }
+        return this.#instance;
+    };
+
+    static createConnection = () => this.getInstance();
 }

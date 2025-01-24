@@ -4,8 +4,14 @@ export const DBType = {
     MOCK: 'mock',
 };
 
-export class MongoDBConfig {
-    static getConfig = () => ({
+export class DBConfigStrategy {
+    getConfig() {
+        throw new Error("Method 'getConfig()' must be implemented.");
+    }
+}
+
+export class MongoDBConfig extends DBConfigStrategy {
+    getConfig = () => ({
         type: DBType.MONGO,
         host: process.env.MONGO_HOST,
         port: process.env.MONGO_PORT,
@@ -15,8 +21,8 @@ export class MongoDBConfig {
     });
 }
 
-export class MySQLDBConfig {
-    static getConfig = () => ({
+export class MySQLDBConfig extends DBConfigStrategy {
+    getConfig = () => ({
         type: DBType.MYSQL,
         host: process.env.MYSQL_HOST,
         port: process.env.MYSQL_PORT,
@@ -26,8 +32,8 @@ export class MySQLDBConfig {
     });
 }
 
-export class InMemoryMockDBConfig {
-    static getConfig = () => ({
+export class InMemoryMockDBConfig extends DBConfigStrategy {
+    getConfig = () => ({
         type: DBType.MOCK,
     });
 }

@@ -1,13 +1,9 @@
 export class DBConnection {
-    provider;
+    #provider;
 
-    static establishConnection = () => {
-        // Connect to DB
-    };
+    static establishConnection = () => {};
 }
 
 export class DBConnectionFactory {
-    static createConnection = () => {
-        // Create a connection
-    };
+    static createConnection = () => {};
 }
