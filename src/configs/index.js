@@ -1,2 +1,2 @@
-export { EnvironmentType, AppConfig, DBConfig, isDevEnvironment, isProdEnvironment } from './app.js';
+export { EnvironmentType, AppConfig, DBConfig, isDevEnvironment, isProdEnvironment } from './environment.js';
 export { DBType } from './dbStrategy.js';

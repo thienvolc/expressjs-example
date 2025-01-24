@@ -5,7 +5,8 @@ export const isDevEnvironment = (environmentType) => environmentType === Environ
 
 export const isProdEnvironment = (environmentType) => environmentType === EnvironmentType.PRODUCTION;
 
-export const isValidEnvironmentType = (environmentType) => Object.values(EnvironmentType).includes(environmentType);
+export const isValidEnvironmentType = (environmentType) => 
+    Object.values(EnvironmentType).includes(environmentType);
 
 export const EnvironmentType = {
     DEVELOPMENT: 'development',
