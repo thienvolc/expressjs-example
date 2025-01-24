@@ -2,47 +2,54 @@ import process from 'process';
 import { StoppedState } from './states.js';
 
 export default class Server {
-    constructor(config) {
-        this.app = config.app;
-        this.port = config.port;
-        this.host = config.host;
-        this.instance = null;
-        this.state = new StoppedState(this);
+    #app;
+    #config;
+    #instance;
+    #state;
+
+    static create = (app, config) => new Server(app, config);
+
+    constructor(app, config) {
+        this.#app = app;
+        this.#config = config;
+        this.#instance = null;
+        this.#state = new StoppedState(this);
     }
 
-    static createByConfig = (config) => new Server(config);
-
     transitionTo = (newState) => {
-        this.state = newState;
+        this.#state = newState;
     };
 
     start = () => {
-        this.state.start();
+        this.#state.start();
     };
 
     stop = () => {
-        this.state.stop();
+        this.#state.stop();
     };
 
-    startApp = () => {
-        this.instance = this.app.listen(this.port, this.host, () => {
-            console.log(`Server running on http://${this.host}:${this.port}`);
+    #initializeServer = () => {
+        const { host, port } = this.#config;
+        this.#instance = this.#app.listen(port, host, () => {
+            console.log(`Server running on http://${host}:${port}`);
         });
-
-        this.addSignalListeners();
+        this.#addSignalListeners();
     };
 
-    addSignalListeners = () => {
+    #addSignalListeners = () => {
         process.on('SIGINT', () => this.stopApp());
         process.on('SIGTERM', () => this.stopApp());
     };
 
-    stopApp = () => {
-        if (this.instance) {
-            this.instance.close(() => {
+    #terminateServer = () => {
+        if (this.#instance) {
+            this.#instance.close(() => {
                 console.log('Server instance closed.');
                 process.exit(0);
             });
         }
     };
+
+    startApp = this.#initializeServer;
+    stopApp = this.#terminateServer;
 }

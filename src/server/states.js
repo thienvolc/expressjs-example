@@ -10,6 +10,14 @@ class ServerState {
     stop = () => {
         throw new Error('stop() must be implemented by subclasses');
     };
+
+    log = (message) => {
+        console.log(`[${this.constructor.name}] : ${message}`);
+    };
+
+    handleError = (error) => {
+        console.error(`[${this.constructor.name}] : ${error}`);
+    };
 }
 
 export class StoppedState extends ServerState {
@@ -17,25 +25,29 @@ export class StoppedState extends ServerState {
         try {
             this.server.startApp();
             this.server.transitionTo(new RunningState(this.server));
-            console.log('Server has started.');
+            this.log('Server has started.');
         } catch (error) {
-            console.error(`Error starting server: ${error}`);
+            this.handleError(`Failed to start server: ${error}`);
         }
     };
 
     stop = () => {
-        console.log('Server is already stopped.');
+        this.log('Server is already stopped.');
     };
 }
 
 export class RunningState extends ServerState {
     start = () => {
-        console.log('Server is already running.');
+        this.log('Server is already running.');
     };
 
     stop = () => {
-        this.server.stopApp();
-        this.server.transitionTo(new StoppedState(this.server));
-        console.log('Server has stopped.');
+        try {
+            this.server.stopApp();
+            this.server.transitionTo(new StoppedState(this.server));
+            this.log('Server has stopped.');
+        } catch (error) {
+            this.handleError(`Failed to stop server: ${error}`);
+        }
     };
 }

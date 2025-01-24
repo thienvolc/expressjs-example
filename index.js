@@ -7,6 +7,5 @@ import { createDBConnection } from './src/dbs/index.js';
 const dbConnection = createDBConnection();
 await dbConnection.connect();
 
-const serverConfig = { ...AppConfig, app };
-const server = Server.createByConfig(serverConfig);
+const server = Server.create(app, AppConfig);
 server.start();
