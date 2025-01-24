@@ -7,7 +7,6 @@ export default class AuthTokenKeyRepository {
     static findByUserId = async (userId) => {
         const filter = { userId: castMongooseObjectId(userId) };
         return await authTokenKeyModel.findOne(filter).lean();
-        console.log("🚀 ~ AuthTokenKeyRepository ~ findByUserId= ~ userId:", userId)
     };
 
     static findByUserIdAndUpdate = async (userId, update, options) => {

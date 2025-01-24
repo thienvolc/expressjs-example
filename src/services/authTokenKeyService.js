@@ -10,7 +10,6 @@ export default class AuthTokenKeyService {
 
     static getAuthKeyPairByUserId = async (userId) => {
         const tokenKey = await AuthTokenKeyRepository.findByUserId(userId);
-        console.log(tokenKey);
         const { privateKey, publicKey } = tokenKey;
         return { privateKey, publicKey };
     };
