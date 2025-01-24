@@ -4,9 +4,9 @@ import { MongoConnectionSingletonFactory } from './mongo/mongo-connection.js';
 // import { MySQLConnectionSingletonFactory } from './mysql/mysql-connection.js';
 
 export const createDBConnection = () => {
-    const DBconnection = createDBConnectionByType(DBConfig.type);
-    setupForDevelopment(DBconnection);
-    return DBconnection;
+    const dbConnection = createDBConnectionByType(DBConfig.type);
+    setupForDevelopment(dbConnection);
+    return dbConnection;
 };
 
 const createDBConnectionByType = (dbType) => {
@@ -18,10 +18,10 @@ const createDBConnectionByType = (dbType) => {
     }
 };
 
-export const setupForDevelopment = (DBconnection) => {
-    DBconnection.setConfig(DBConfig);
+export const setupForDevelopment = (dbConnection) => {
+    dbConnection.setConfig(DBConfig);
     if (isDevEnvironment(AppConfig.environment)) {
-        DBconnection.setDebug();
-        DBconnection.setSafePoolSize();
+        dbConnection.setDebug();
+        dbConnection.setSafePoolSize();
     }
 };

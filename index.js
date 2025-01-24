@@ -4,8 +4,8 @@ import { AppConfig } from './src/configs/index.js';
 
 import { createDBConnection } from './src/dbs/index.js';
 
-const DBconnection = createDBConnection();
-await DBconnection.connect();
+const dbConnection = createDBConnection();
+await dbConnection.connect();
 
 const serverConfig = { ...AppConfig, app };
 const server = Server.createByConfig(serverConfig);
