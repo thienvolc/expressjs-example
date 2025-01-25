@@ -20,10 +20,8 @@ export const generateRandomKeyPair = () => {
     };
 };
 
-export const generateTokenPair = (payload, keyPair) => {
-    const accessToken = jwt.sign(payload, keyPair.publicKey, { expiresIn: '2 days' });
-    const refreshToken = jwt.sign(payload, keyPair.privateKey, { expiresIn: '7 days' });
-    return { accessToken, refreshToken };
+export const signToken = (payload, key, options) => {
+    return jwt.sign(payload, key, options);
 };
 
 export const verifyToken = (token, key) => {

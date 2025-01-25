@@ -15,7 +15,7 @@ class AuthController {
     static logIn = async (req, res, next) => {
         const refreshToken = getRefreshTokenFromHeaders(req.headers);
         const metadata = refreshToken
-            ? await AuthService.logInAndRecordRefreshToken(req.body, refreshToken)
+            ? await AuthService.logInWithRefreshTokenTracking(req.body, refreshToken)
             : await AuthService.logIn(req.body);
         const response = new OK({ message: 'User logged in successfully', metadata });
         ResponseSender.send(res, response);
@@ -33,7 +33,7 @@ class AuthController {
     static logOut = async (req, res, next) => {
         const refreshToken = getRefreshTokenFromHeaders(req.headers);
         refreshToken
-            ? await AuthService.logOutAllUsersAndRecordRefreshToken(req.body.userId, refreshToken)
+            ? await AuthService.logOutAllUsersWithRefreshTokenTracking(req.body.userId, refreshToken)
             : await AuthService.logOutAllUsers(req.body.userId);
         const response = new OK({ message: 'All users logged out successfully' });
         ResponseSender.send(res, response);

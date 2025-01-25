@@ -1,11 +1,13 @@
-import { AppConfig, DBConfig, DBType, isDevEnvironment } from '../configs/index.js';
+import { AppConfig, DBConfig, DBType, isDevEnvironment } from '../config/index.js';
 import { MongoConnectionSingletonFactory } from './mongo/mongo-connection.js';
 
 // import { MySQLConnectionSingletonFactory } from './mysql/mysql-connection.js';
 
-export const createDBConnection = () => {
+export const createDBConnection = async () => {
     const dbConnection = createDBConnectionByType(DBConfig.type);
+    dbConnection.setConfig(DBConfig);
     setupForDevelopment(dbConnection);
+    await dbConnection.connect();
     return dbConnection;
 };
 
@@ -19,7 +21,6 @@ const createDBConnectionByType = (dbType) => {
 };
 
 export const setupForDevelopment = (dbConnection) => {
-    dbConnection.setConfig(DBConfig);
     if (isDevEnvironment(AppConfig.environment)) {
         dbConnection.setDebug();
         dbConnection.setSafePoolSize();

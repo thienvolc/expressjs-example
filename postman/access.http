@@ -1,6 +1,8 @@
 @uri=http://localhost:3000/api/v1
 @accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkwYjc3MzEyOWI3MzllYWIyMzk0MmMiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNzM3NTM3Mzk1LCJleHAiOjE3Mzc3MTAxOTV9.ywXzGB7Qf2py2dBb0YwkMBGnRPYotNSRX7UCUX2gsNM
-@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkyMTM0ODg2MzIzYjYzNzgyMTI3NTciLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNzM3NjI3MDcxLCJleHAiOjE3MzgyMzE4NzF9.LHVR-r5p51tcvX1nP_cUCm6Ouos-78dT2ansg-NHxoY
+@refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Nzk0ZDFmOGVjYmRkM2E5NjMyOGY3YjIiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNzM3ODA2MzM1LCJleHAiOjE3Mzg0MTExMzV9.GeROKvpgCJN53-NsgoUAw1uI8P9qOvaXw9rUbFSsCMQ
+@userId=6794d1f8ecbdd3a96328f7b2
+
 @apiKey=
 ### user signup
 POST {{uri}}/user/signup
@@ -28,7 +30,7 @@ x-refresh-token: {{refreshToken}}
 Content-Type: application/json
 
 {
-    "userId": "6792134886323b6378212757"
+    "userId": "{{userId}}"
 }
 
 ### user logout
@@ -37,5 +39,5 @@ x-refresh-token: {{refreshToken}}
 Content-Type: application/json
 
 {
-    "userId": "6792134886323b6378212757"
+    "userId": "{{userId}}"
 }

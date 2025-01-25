@@ -2,9 +2,10 @@
   "name": "backend-nodejs",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
+  "main": "./src/server.js",
   "scripts": {
-    "start": "node --watch index.js"
+    "start": "node ./src/server.js",
+    "dev": "nodemon ./src/server.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +21,7 @@
   "devDependencies": {
     "compression": "^1.7.5",
     "helmet": "^8.0.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "nodemon": "^3.1.9"
   }
 }
