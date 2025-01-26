@@ -4,19 +4,19 @@ import { getRefreshTokenFromHeaders } from '../utils/jwt/index.js';
 import { asyncErrorDecorator } from '../helpers/asyncErrorWrapper.js';
 
 class AuthController {
-    static signUp = async (req, res, next) => {
+    static signup = async (req, res, next) => {
         const response = new CREATED({
             message: 'User created successfully',
-            metadata: await AuthService.signUp(req.body),
+            metadata: await AuthService.signup(req.body),
         });
         ResponseSender.send(res, response);
     };
 
-    static logIn = async (req, res, next) => {
+    static login = async (req, res, next) => {
         const refreshToken = getRefreshTokenFromHeaders(req.headers);
         const metadata = refreshToken
-            ? await AuthService.logInWithRefreshTokenTracking(req.body, refreshToken)
-            : await AuthService.logIn(req.body);
+            ? await AuthService.loginWithRefreshTokenTracking(req.body, refreshToken)
+            : await AuthService.login(req.body);
         const response = new OK({ message: 'User logged in successfully', metadata });
         ResponseSender.send(res, response);
     };
@@ -30,11 +30,11 @@ class AuthController {
         ResponseSender.send(res, response);
     };
 
-    static logOut = async (req, res, next) => {
+    static logout = async (req, res, next) => {
         const refreshToken = getRefreshTokenFromHeaders(req.headers);
         refreshToken
-            ? await AuthService.logOutAllUsersWithRefreshTokenTracking(req.body.userId, refreshToken)
-            : await AuthService.logOutAllUsers(req.body.userId);
+            ? await AuthService.logoutAllUsersWithRefreshTokenTracking(req.body.userId, refreshToken)
+            : await AuthService.logoutAllUsers(req.body.userId);
         const response = new OK({ message: 'All users logged out successfully' });
         ResponseSender.send(res, response);
     };
