@@ -1,8 +1,17 @@
 import app from './app.js';
 import { AppConfig } from './config/index.js';
-import { createDBConnection } from './dbs/index.js';
+import { ProxyDBConnection } from './database/index.js';
 
-createDBConnection();
+const initializeApp = async () => {
+    try {
+        await ProxyDBConnection.establishConnection();
+        const { host, port } = AppConfig;
+        runApp(port, host);
+    } catch (error) {
+        console.error('Error establishing DB connection:', error);
+        process.exit(1);
+    }
+};
 
 const runApp = (port, host) => {
     app.listen(port, host, () => {
@@ -10,4 +19,4 @@ const runApp = (port, host) => {
     });
 };
 
-runApp(AppConfig.port, AppConfig.host);
+initializeApp();

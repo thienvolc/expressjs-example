@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import AccessRouter from './accessRoute.js';
+import AccessRouter from './AccessRoute.js';
 
 const router = Router();
 

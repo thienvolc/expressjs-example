@@ -1,4 +1,4 @@
-import User from '../User.js';
+import { User } from '../models/index.js';
 
 export default class UserRepository {
     static create = async (user) => await User.create(user);

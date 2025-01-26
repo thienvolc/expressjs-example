@@ -1,6 +1,6 @@
-import UserRepository from '../models/repositories/userRepo.js';
-import { comparePassword, hashPassword } from '../auth/index.js';
-import { InternalServerError, BadRequestError, AuthFailureError } from '../utils/responses/response-error.js';
+import { UserRepository } from '../repositories/index.js';
+import { comparePassword, hashPassword } from '../utils/auth.js';
+import { InternalServerError, BadRequestError, AuthFailureError } from '../utils/responses/index.js';
 
 export default class UserService {
     static createUserWithHashPassword = async ({ name, email, password }) => {

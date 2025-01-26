@@ -1,7 +1,7 @@
 import AuthService from '../services/authService.js';
 import { ResponseSender, CREATED, OK } from '../utils/responses/index.js';
-import { asyncErrorDecorator } from '../helpers/async-error-wrapper.js';
-import { getRefreshTokenFromHeaders } from '../auth/index.js';
+import { asyncErrorDecorator } from '../helpers/asyncErrorWrapper.js';
+import { getRefreshTokenFromHeaders } from '../utils/auth.js';
 
 class AuthController {
     static signUp = async (req, res, next) => {

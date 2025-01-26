@@ -1,5 +1,5 @@
-import UserService from './userService.js';
-import RefreshTokenKeyService from './refreshTokenKeyService.js';
+import UserService from './UserService.js';
+import RefreshTokenKeyService from './RefreshTokenKeyService.js';
 import { selectFieldsFromObject } from '../utils/index.js';
 
 export default class AuthService {

@@ -1,4 +1,4 @@
-import { StatusCode, Message } from '../httpResponseConstants/index.js';
+import { StatusCode, ResponseMessage } from '../http/index.js';
 
 export class SuccessResponse {
     constructor({ statusCode, message, metadata = {}, reason }) {
@@ -12,7 +12,7 @@ export class SuccessResponse {
 export class OK extends SuccessResponse {
     constructor({ 
         statusCode = StatusCode.OK, 
-        reason = Message.OK, 
+        reason = ResponseMessage.OK, 
         message, 
         metadata 
     }) {
@@ -23,7 +23,7 @@ export class OK extends SuccessResponse {
 export class CREATED extends SuccessResponse {
     constructor({ 
         statusCode = StatusCode.CREATED, 
-        reason = Message.CREATED, 
+        reason = ResponseMessage.CREATED, 
         message,
         metadata, 
         options = {} 

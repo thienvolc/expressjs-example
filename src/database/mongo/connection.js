@@ -1,5 +1,5 @@
-import MongoDB from './mongo.js';
-import { DBConnection, DBConnectionFactory } from '../db/index.js';
+import MongoDB from './index.js';
+import { DBConnection, DBConnectionFactory } from '../DBConnectionFactory.js';
 
 export class MongoUriHandler {
     #config;
@@ -50,9 +50,13 @@ export class MongoConnection extends DBConnection {
 
     setSafePoolSize = () => {
         this.#options = { maxPoolSize: 100 };
-    }
+    };
 
-    connect = async () => {
+    establishConnection = async () => {
+        this.#connect();
+    };
+
+    #connect = async () => {
         const connectionUri = MongoUriHandler.getUriFromConfig(this.#config);
         const connection = await this.#provider.connect(connectionUri, this.#options);
         return connection;

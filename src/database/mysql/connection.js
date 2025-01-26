@@ -1,5 +1,5 @@
-import MySQLDB from './mysql.js';
-import { DBConnection, DBConnectionFactory } from '../db/index.js';
+import MySQLDB from './index.js';
+import { DBConnection, DBConnectionFactory } from '../DBConnectionFactory.js';
 
 export class MySQLUriHandler {
     #config;
@@ -44,11 +44,11 @@ export class MySQLConnection extends DBConnection {
 
     setSafePoolSize = () => {};
 
-    connect = async () => {
-        const connectionUri = MySQLUriHandler.getUriFromConfig(this.#config);
-        const connection = await this.#provider.connect(connectionUri, this.#options);
-        return connection;
+    establishConnection = async () => {
+        this.#connect();
     };
+
+    #connect = async () => {};
 }
 
 export class MySQLConnectionSingletonFactory extends DBConnectionFactory {
