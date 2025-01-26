@@ -1,4 +1,4 @@
-import { StaticMethodDecorator } from '../utils/index.js';
+import { StaticMethodDecorator } from '../utils/decorators.js';
 
 export const asyncErrorWrapper = (middleware) => 
     (req, res, next) => middleware(req, res, next).catch(next);

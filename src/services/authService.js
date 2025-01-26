@@ -1,6 +1,6 @@
 import UserService from './UserService.js';
 import RefreshTokenKeyService from './RefreshTokenKeyService.js';
-import { selectFieldsFromObject } from '../utils/index.js';
+import { selectFieldsFromObject } from '../utils/objectUtils.js';
 
 export default class AuthService {
     static signUp = async ({ name, email, password }) => {

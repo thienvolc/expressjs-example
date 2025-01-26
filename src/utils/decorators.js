@@ -1,6 +1,3 @@
-export const selectFieldsFromObject = (object, fields) => 
-    Object.fromEntries(fields.map((field) => [field, object[field]]));
-
 export class StaticMethodDecorator {
     constructor(decorator) {
         this.decorator = decorator;
@@ -19,14 +16,9 @@ export class StaticMethodDecorator {
         return WrappedClass;
     };
 
-    getStaticMethodsOfClass = (Class) => 
-        Object.getOwnPropertyNames(Class).filter((property) =>
-            this.isStaticMethod(Class, property)
-        );
+    getStaticMethodsOfClass = (Class) =>
+        Object.getOwnPropertyNames(Class).filter((property) => this.isStaticMethod(Class, property));
 
-    isStaticMethod = (Class, method) => 
+    isStaticMethod = (Class, method) =>
         typeof Class[method] === 'function' && method !== 'prototype' && method !== 'constructor';
 }
-
-import { Types } from 'mongoose';
-export const castMongooseObjectId = (id) => new Types.ObjectId(id);

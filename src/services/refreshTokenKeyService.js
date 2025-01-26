@@ -1,8 +1,8 @@
 import { RefreshTokenKeyRepository } from '../repositories/index.js';
-import { generateRandomKeyPair, signToken, verifyToken } from '../utils/auth.js';
-import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from '../config/index.js';
-import { selectFieldsFromObject } from '../utils/index.js';
+import { generateRandomKeyPair, signToken, verifyToken } from '../utils/jwt/index.js';
 import { AuthFailureError, ForbiddenError } from '../utils/responses/index.js';
+import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from '../config/index.js';
+import { selectFieldsFromObject } from '../utils/objectUtils.js';
 
 export default class RefreshTokenKeyService {
     static createTokenPairForUser = async (user) => {

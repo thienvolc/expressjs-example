@@ -1,5 +1,5 @@
 import { RefreshTokenKey } from '../models/index.js';
-import { castMongooseObjectId } from '../utils/index.js';
+import { castMongooseObjectId } from '../utils/mongooseUtils.js';
 
 export default class RefreshTokenKeyRepository {
     static create = async (tokenKey) => await RefreshTokenKey.create(tokenKey);

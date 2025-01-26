@@ -1,8 +1,4 @@
-export const DBType = {
-    MONGO: 'mongo',
-    MYSQL: 'mysql',
-    MOCK: 'mock',
-};
+import { DBType } from "./DBType.js";
 
 export class DBConfigStrategy {
     getConfig() {
