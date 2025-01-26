@@ -1,7 +1,7 @@
 @uri=http://localhost:3000/api/v1
 @accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzkwYjc3MzEyOWI3MzllYWIyMzk0MmMiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNzM3NTM3Mzk1LCJleHAiOjE3Mzc3MTAxOTV9.ywXzGB7Qf2py2dBb0YwkMBGnRPYotNSRX7UCUX2gsNM
 @refreshToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2Nzk0ZDFmOGVjYmRkM2E5NjMyOGY3YjIiLCJlbWFpbCI6ImpvaG5AZ21haWwuY29tIiwiaWF0IjoxNzM3ODA2MzM1LCJleHAiOjE3Mzg0MTExMzV9.GeROKvpgCJN53-NsgoUAw1uI8P9qOvaXw9rUbFSsCMQ
-@userId=6794d1f8ecbdd3a96328f7b2
+@userId=6795fd54b007868e6b46f2a9
 
 @apiKey=
 ### user signup
@@ -11,7 +11,7 @@ Content-Type: application/json
 {
     "name": "John Doe",
     "email": "john@gmail.com",
-    "password": "12345"
+    "password": "123456"
 }
 
 ### user login
@@ -21,7 +21,7 @@ Content-Type: application/json
 
 {
     "email": "john@gmail.com",
-    "password": "12345"
+    "password": "123456"
 }
 
 ### user refresh token
