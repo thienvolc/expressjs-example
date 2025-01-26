@@ -1,4 +1,4 @@
-import AuthService from '../services/authService.js';
+import AuthService from '../services/AuthService.js';
 import { ResponseSender, CREATED, OK } from '../utils/responses/index.js';
 import { getRefreshTokenFromHeaders } from '../utils/jwt/index.js';
 import { asyncErrorDecorator } from '../helpers/asyncErrorWrapper.js';
