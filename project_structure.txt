@@ -1,88 +1,76 @@
 .
-├── README.md
-├── init-database-shell
-│   ├── init-mongodb-docker.sh
-│   └── run-mongosh.sh
-├── package-lock.json
-├── package.json
-├── postman
-│   └── access.http
-├── src
-│   ├── app.js
-│   ├── config
-│   │   ├── db
-│   │   │   ├── DBConfigStrategy.js
-│   │   │   ├── DBType.js
-│   │   │   └── index.js
-│   │   ├── env
-│   │   │   ├── EnvironmentConfig.js
-│   │   │   ├── EnvironmentConfigFactory.js
-│   │   │   └── index.js
-│   │   ├── index.js
-│   │   └── jwt.js
-│   ├── controllers
-│   │   ├── authController.js
-│   │   └── userController.js
-│   ├── database
-│   │   ├── DBConnectionFactory.js
-│   │   ├── ProxyDBConnection.js
-│   │   ├── index.js
-│   │   ├── mongo
-│   │   │   ├── connection.js
-│   │   │   └── index.js
-│   │   ├── mysql
-│   │   │   ├── connection.js
-│   │   │   └── index.js
-│   │   └── redis
-│   │       ├── connection.js
-│   │       └── index.js
-│   ├── helpers
-│   │   └── asyncErrorWrapper.js
-│   ├── middlewares
-│   │   ├── authentication.js
-│   │   └── errorHandler.js
-│   ├── models
-│   │   ├── RefreshTokenKey.js
-│   │   ├── User.js
+├── app.js
+├── config
+│   ├── db
+│   │   ├── DBConfigStrategy.js
+│   │   ├── DBType.js
 │   │   └── index.js
-│   ├── repositories
-│   │   ├── RefreshTokenKeyRepo.js
-│   │   ├── UserRepo.js
+│   ├── env
+│   │   ├── EnvironmentConfig.js
+│   │   ├── EnvironmentConfigFactory.js
 │   │   └── index.js
-│   ├── routes
-│   │   ├── accessRoute.js
+│   ├── index.js
+│   └── jwt.js
+├── controllers
+│   ├── AuthController.js
+│   └── UserController.js
+├── database
+│   ├── DBConnectionFactory.js
+│   ├── ProxyDBConnection.js
+│   ├── index.js
+│   ├── mongo
+│   │   ├── connection.js
 │   │   └── index.js
-│   ├── server.js
-│   ├── services
-│   │   ├── authService.js
-│   │   ├── refreshTokenKeyService.js
-│   │   └── userService.js
-│   ├── utils
-│   │   ├── auth.js
-│   │   ├── decorators.js
-│   │   ├── http
-│   │   │   ├── constants
-│   │   │   │   ├── httpResponseMessages.js
-│   │   │   │   ├── httpStatusCodes.js
-│   │   │   │   └── index.js
-│   │   │   └── index.js
-│   │   ├── jwt
-│   │   │   ├── index.js
-│   │   │   └── jwtHelper.js
-│   │   ├── mongooseUtils.js
-│   │   ├── objectUtils.js
-│   │   └── responses
-│   │       ├── customErrors.js
-│   │       ├── errorResponse.js
-│   │       ├── index.js
-│   │       ├── responseSender.js
-│   │       └── successResponse.js
-│   └── validators
-│       ├── AuthValidator.js
-│       ├── UserValidator.js
+│   ├── mysql
+│   │   ├── connection.js
+│   │   └── index.js
+│   └── redis
+│       ├── connection.js
 │       └── index.js
-└── vocabulary
-    ├── design-pattern.md
-    └── guide.md
+├── helpers
+│   └── asyncErrorWrapper.js
+├── middlewares
+│   ├── authentication.js
+│   └── errorHandler.js
+├── models
+│   ├── RefreshTokenKey.js
+│   ├── User.js
+│   └── index.js
+├── repositories
+│   ├── RefreshTokenKeyRepo.js
+│   ├── UserRepo.js
+│   └── index.js
+├── routes
+│   ├── AccessRoute.js
+│   └── index.js
+├── server.js
+├── services
+│   ├── AuthService.js
+│   ├── RefreshTokenKeyService.js
+│   └── UserService.js
+├── utils
+│   ├── auth.js
+│   ├── decorators.js
+│   ├── http
+│   │   ├── constants
+│   │   │   ├── httpResponseMessages.js
+│   │   │   ├── httpStatusCodes.js
+│   │   │   └── index.js
+│   │   └── index.js
+│   ├── jwt
+│   │   ├── index.js
+│   │   └── jwtHelper.js
+│   ├── mongooseUtils.js
+│   ├── objectUtils.js
+│   └── responses
+│       ├── customErrors.js
+│       ├── errorResponse.js
+│       ├── index.js
+│       ├── responseSender.js
+│       └── successResponse.js
+└── validators
+    ├── AuthValidator.js
+    ├── UserValidator.js
+    └── index.js
 
-25 directories, 61 files
+21 directories, 53 files
