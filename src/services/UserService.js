@@ -1,12 +1,12 @@
 import { UserRepository } from '../repositories/index.js';
-import { comparePassword, hashPassword } from '../utils/auth.js';
+import { comparePassword, hashPassword } from '../utils/authUtils.js';
 import { InternalServerError, BadRequestError, AuthFailureError } from '../utils/responses/index.js';
 
 export default class UserService {
     static createUserWithHashPassword = async ({ name, email, password }) => {
-        await UserService.ensureEmailNotExist(email);
+        await this.ensureEmailNotExist(email);
         const hashedPassword = await hashPassword(password);
-        return await UserService.createUser({ name, email, password: hashedPassword });
+        return this.createUser({ name, email, password: hashedPassword });
     };
 
     static createUser = async ({ name, email, password }) => {

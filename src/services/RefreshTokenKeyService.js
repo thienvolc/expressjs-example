@@ -1,20 +1,19 @@
 import { RefreshTokenKeyRepository } from '../repositories/index.js';
 import { generateRandomKeyPair, signToken, verifyToken } from '../utils/jwt/index.js';
 import { AuthFailureError, ForbiddenError } from '../utils/responses/index.js';
-import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from '../config/index.js';
 import { selectFieldsFromObject } from '../utils/objectUtils.js';
+import { ACCESS_TOKEN_EXPIRY, REFRESH_TOKEN_EXPIRY } from '../config/jwt/index.js';
 
 export default class RefreshTokenKeyService {
     static createTokenPairForUser = async (user) => {
         const payload = this.#createTokenPayload(user);
         const keyPair = this.#generateRandomKeyPair();
         const tokenPair = this.#generateTokenPairFromKeyPair(payload, keyPair);
-        await RefreshTokenKeyRepository.create({ userId: user._id, ...keyPair, refreshToken: tokenPair.refreshToken });
+        await this.#storeTokenkeyForUser(user._id, tokenPair.refreshToken, keyPair);
         return tokenPair;
     };
 
     static #createTokenPayload = (user) => selectFieldsFromObject(user, ['_id', 'email']);
-
     static #generateRandomKeyPair = () => generateRandomKeyPair();
 
     static #generateTokenPairFromKeyPair = (payload, keyPair) => {
@@ -31,12 +30,16 @@ export default class RefreshTokenKeyService {
         return signToken(payload, key, options);
     };
 
+    static #storeTokenkeyForUser = async (userId, refreshToken, keyPair) => {
+        await RefreshTokenKeyRepository.create({ userId, ...keyPair, refreshToken });
+    };
+
     static verifyUserRefreshToken = async (refreshToken, userId) => {
-        const tokenKey = await this.#requireTokenKeyByUserId(userId);
+        const tokenKey = await this.#getTokenKeyByUserId(userId);
         await this.#verifyTokenIntegrity(refreshToken, tokenKey);
     };
 
-    static #requireTokenKeyByUserId = async (userId) => {
+    static #getTokenKeyByUserId = async (userId) => {
         const tokenKey = await RefreshTokenKeyRepository.findByUserId(userId);
         if (!tokenKey) {
             throw new AuthFailureError('User does not exist');
@@ -48,20 +51,18 @@ export default class RefreshTokenKeyService {
         if (tokenKey.refreshToken === refreshToken) {
             return this.#verifyTokenAndExtractPayload(refreshToken, tokenKey.privateKey);
         }
-        await this.#preventReusedRefreshToken(tokenKey, refreshToken);
+        await this.#handleReusedRefreshToken(tokenKey, refreshToken);
         throw new AuthFailureError('Invalid refresh token');
     };
 
     static #verifyTokenAndExtractPayload = (token, key) => verifyToken(token, key);
-
-    static #preventReusedRefreshToken = async (tokenKey, refreshToken) => {
-        if (this.#refreshTokenWasUsed(refreshToken, tokenKey)) {
+    static #handleReusedRefreshToken = async (tokenKey, refreshToken) => {
+        if (this.isRefreshTokenUsed(refreshToken, tokenKey)) {
             await this.#revokeReusedRefreshToken(tokenKey.userId, refreshToken);
             throw new ForbiddenError('Refresh token has been reused. Please log in again!');
         }
     };
-
-    static #refreshTokenWasUsed = (refreshToken, tokenKey) => tokenKey.usedRefreshTokens.includes(refreshToken);
+    static isRefreshTokenUsed = (refreshToken, tokenKey) => tokenKey.usedRefreshTokens.includes(refreshToken);
 
     static #revokeReusedRefreshToken = async (userId, refreshToken) => {
         await this.invalidateTokenKeyOfUser(userId);
@@ -81,13 +82,13 @@ export default class RefreshTokenKeyService {
 
     static refreshTokenPairForUser = async (user) => {
         const payload = this.#createTokenPayload(user);
-        const keyPair = await this.#getKeyPairByUserId(user._id);
+        const keyPair = await this.getKeyPairByUserId(user._id);
         const tokenPair = this.#generateTokenPairFromKeyPair(payload, keyPair);
         await this.#updateActiveRefreshTokenByUserId(user._id, tokenPair.refreshToken);
         return tokenPair;
     };
 
-    static #getKeyPairByUserId = async (userId) => {
+    static getKeyPairByUserId = async (userId) => {
         const tokenKey = await RefreshTokenKeyRepository.findByUserId(userId);
         return this.#extractKeyPair(tokenKey);
     };
