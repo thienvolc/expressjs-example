@@ -1,24 +1,20 @@
 export class StaticMethodDecorator {
     constructor(decorator) {
+        console.log(typeof decorator);
         this.decorator = decorator;
     }
 
     decorateAllStaticMethods = (Class) => {
-        const classStaticMethods = this.getStaticMethodsOfClass(Class);
-        return this.applyDecoratorToMethods(Class, classStaticMethods);
-    };
-
-    applyDecoratorToMethods = (Class, methods) => {
-        const WrappedClass = class {};
-        methods.forEach((method) => {
-            WrappedClass[method] = this.decorator(Class[method], method);
+        return new Proxy(Class, {
+            get: (target, property) => {
+                if (StaticMethodDecorator.isStaticMethod(target, property)) {
+                    return this.decorator(target[property]);
+                }
+                return target[property];
+            },
         });
-        return WrappedClass;
     };
-
-    getStaticMethodsOfClass = (Class) =>
-        Object.getOwnPropertyNames(Class).filter((property) => this.isStaticMethod(Class, property));
-
-    isStaticMethod = (Class, method) =>
-        typeof Class[method] === 'function' && method !== 'prototype' && method !== 'constructor';
+    static isStaticMethod(Class, method) {
+        return typeof Class[method] === 'function' && method !== 'prototype' && method !== 'constructor';
+    }
 }
